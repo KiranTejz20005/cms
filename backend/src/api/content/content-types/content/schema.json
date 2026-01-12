@@ -1,0 +1,65 @@
+{
+    "kind": "collectionType",
+    "collectionName": "contents",
+    "info": {
+        "singularName": "content",
+        "pluralName": "contents",
+        "displayName": "Content"
+    },
+    "options": {
+        "draftAndPublish": true
+    },
+    "attributes": {
+        "title": {
+            "type": "string",
+            "required": true
+        },
+        "type": {
+            "type": "enumeration",
+            "enum": [
+                "Video",
+                "Article",
+                "Course"
+            ],
+            "default": "Video"
+        },
+        "category": {
+            "type": "string"
+        },
+        "author": {
+            "type": "string"
+        },
+        "modules": {
+            "type": "integer",
+            "default": 1
+        },
+        "grade": {
+            "type": "enumeration",
+            "enum": [
+                "Grade 1",
+                "Grade 2",
+                "Grade 3",
+                "Grade 4",
+                "Grade 5",
+                "Grade 6",
+                "Grade 7",
+                "Grade 8",
+                "Grade 9",
+                "Grade 10",
+                "Grade 11",
+                "Grade 12"
+            ]
+        },
+        "media": {
+            "type": "media",
+            "multiple": false,
+            "required": false,
+            "allowedTypes": [
+                "images",
+                "videos",
+                "files",
+                "audios"
+            ]
+        }
+    }
+}
