@@ -22,8 +22,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const initAuth = async () => {
         try {
-            // 0. Check for OAuth callback in URL hash
+            // Get hash once
             const hash = window.location.hash;
+
+            // 0. Check for OAuth callback in URL hash
             if (hash && hash.includes('access_token')) {
                 console.log('OAuth callback detected in initAuth, letting Supabase handle it...');
                 // Let Supabase process it through onAuthStateChange
@@ -76,12 +78,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
             // 3. FINAL FALLBACK: Manual Hash Parsing (The "Fix It Bruhh" Protocol)
             // If Supabase failed to catch the session (e.g. wrong Anon Key), we catch it manually.
-            const urlHash = window.location.hash;
-            if (urlHash && urlHash.includes('access_token')) {
-
-
+            if (hash && hash.includes('access_token')) {
                 // Extract params
-                const params = new URLSearchParams(urlHash.substring(1)); // remove #
+                const params = new URLSearchParams(hash.substring(1)); // remove #
                 const accessToken = params.get('access_token');
                 const refreshToken = params.get('refresh_token');
 
