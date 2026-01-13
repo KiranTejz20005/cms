@@ -76,12 +76,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
             // 3. FINAL FALLBACK: Manual Hash Parsing (The "Fix It Bruhh" Protocol)
             // If Supabase failed to catch the session (e.g. wrong Anon Key), we catch it manually.
-            const hash = window.location.hash;
-            if (hash && hash.includes('access_token')) {
+            const urlHash = window.location.hash;
+            if (urlHash && urlHash.includes('access_token')) {
 
 
                 // Extract params
-                const params = new URLSearchParams(hash.substring(1)); // remove #
+                const params = new URLSearchParams(urlHash.substring(1)); // remove #
                 const accessToken = params.get('access_token');
                 const refreshToken = params.get('refresh_token');
 

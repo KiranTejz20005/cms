@@ -31,3 +31,4 @@ export const supabase: SupabaseClient = createClient(
             detectSessionInUrl: true
         }
     }
+);
