@@ -17,21 +17,27 @@ export function Login() {
 
     // Handle OAuth callback and auto-redirect if already authenticated
     useEffect(() => {
-        // Check if user is already authenticated
-        if (isAuthenticated) {
-            navigate('/');
-            return;
-        }
-
         // Handle OAuth callback (hash in URL)
         const hash = window.location.hash;
         if (hash && hash.includes('access_token')) {
             setLoading(true);
+
+            // Clean the URL immediately to prevent re-processing
+            window.history.replaceState(null, '', window.location.pathname);
+
             // Give AuthContext time to process the OAuth callback
-            setTimeout(async () => {
+            const timer = setTimeout(async () => {
                 await refreshAuth();
-                navigate('/');
-            }, 500);
+                // Force navigation to dashboard
+                window.location.href = '/';
+            }, 800);
+
+            return () => clearTimeout(timer);
+        }
+
+        // Check if user is already authenticated and redirect
+        if (isAuthenticated) {
+            navigate('/', { replace: true });
         }
     }, [isAuthenticated, navigate, refreshAuth]);
 
