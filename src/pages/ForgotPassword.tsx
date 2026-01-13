@@ -1,15 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Mail, Loader, AlertCircle, CheckCircle, ArrowLeft, KeyRound } from 'lucide-react';
 import { scaleVariants, fadeInVariants } from '../lib/animations';
+import { useAuth } from '../context/AuthContext';
 
 export function ForgotPassword() {
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
+    const navigate = useNavigate();
+    const { isAuthenticated, loading: authLoading } = useAuth();
+
+    // Redirect if already authenticated
+    useEffect(() => {
+        if (!authLoading && isAuthenticated) {
+            console.log('User already authenticated, redirecting to dashboard');
+            navigate('/', { replace: true });
+        }
+    }, [isAuthenticated, authLoading, navigate]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

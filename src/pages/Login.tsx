@@ -23,9 +23,9 @@ export function Login() {
             return;
         }
 
-        // If authenticated, redirect to dashboard
+        // If authenticated, redirect to dashboard (prevents logged-in users from seeing login page)
         if (isAuthenticated) {
-            console.log('User authenticated, redirecting to dashboard');
+            console.log('User already authenticated, redirecting to dashboard');
             navigate('/', { replace: true });
             return;
         }

@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { useNavigate, Link } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Mail, Lock, Loader, Eye, EyeOff, User, AlertCircle, CheckCircle } from 'lucide-react';
 import { scaleVariants, fadeInVariants } from '../lib/animations';
+import { useAuth } from '../context/AuthContext';
 
 export function Signup() {
     const [email, setEmail] = useState('');
@@ -14,6 +15,15 @@ export function Signup() {
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
     const navigate = useNavigate();
+    const { isAuthenticated, loading: authLoading } = useAuth();
+
+    // Redirect if already authenticated
+    useEffect(() => {
+        if (!authLoading && isAuthenticated) {
+            console.log('User already authenticated, redirecting to dashboard');
+            navigate('/', { replace: true });
+        }
+    }, [isAuthenticated, authLoading, navigate]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

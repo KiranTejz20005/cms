@@ -209,18 +209,36 @@ export function UsersPage() {
                 if (error) throw error;
             }
 
+            // Update the user's role and exit edit mode
             setUsers(users.map(u =>
-                u.id === id ? { ...u, role: newRole, isEditing: false } : u
+                u.id === id ? { ...u, role: newRole, isEditing: false, tempRole: undefined } : u
             ));
+            alert('Role updated successfully!');
         } catch (err: any) {
+            console.error('Role update error:', err);
             alert(`Failed to update role: ${err.message}`);
         }
     };
 
-    const toggleEdit = (id: string | number) => {
+    const cancelEdit = (id: string | number) => {
         setUsers(users.map(u =>
-            u.id === id ? { ...u, isEditing: !u.isEditing, tempRole: u.role } : u
+            u.id === id ? { ...u, isEditing: false, tempRole: undefined } : u
         ));
+    };
+
+    const toggleEdit = (id: string | number) => {
+        setUsers(users.map(u => {
+            if (u.id === id) {
+                // If entering edit mode, set tempRole to current role
+                // If exiting edit mode, clear isEditing
+                return { 
+                    ...u, 
+                    isEditing: !u.isEditing, 
+                    tempRole: !u.isEditing ? u.role : undefined 
+                };
+            }
+            return u;
+        }));
     };
 
     const filteredUsers = users.filter(u =>
@@ -396,8 +414,8 @@ export function UsersPage() {
                                                         <option value="admin">Admin</option>
                                                         <option value="editor">Editor</option>
                                                     </select>
-                                                    <button onClick={() => handleRoleUpdate(user.id, user.authProvider, user.tempRole || 'user')} className="text-green-600 hover:bg-green-50 p-1 rounded"><Save size={14} /></button>
-                                                    <button onClick={() => toggleEdit(user.id)} className="text-red-500 hover:bg-red-50 p-1 rounded"><X size={14} /></button>
+                                                    <button onClick={() => handleRoleUpdate(user.id, user.authProvider, user.tempRole || 'user')} className="text-green-600 hover:bg-green-50 p-1 rounded" title="Save"><Save size={14} /></button>
+                                                    <button onClick={() => cancelEdit(user.id)} className="text-red-500 hover:bg-red-50 p-1 rounded" title="Cancel"><X size={14} /></button>
                                                 </div>
                                             ) : (
                                                 <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold ${(user.role?.toLowerCase().includes('admin'))
