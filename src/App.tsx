@@ -7,7 +7,7 @@ import { Loader } from 'lucide-react';
 // Lazy load pages for better performance
 const DashboardLayout = lazy(() => import('./layouts/DashboardLayout').then(module => ({ default: module.DashboardLayout })));
 const Dashboard = lazy(() => import('./pages/Dashboard').then(module => ({ default: module.Dashboard })));
-const Subjects = lazy(() => import('./pages/Subjects').then(module => ({ default: module.Subjects })));
+// Subjects page removed - not currently used
 const UsersPage = lazy(() => import('./pages/Users').then(module => ({ default: module.UsersPage })));
 const ContentPage = lazy(() => import('./pages/Content').then(module => ({ default: module.ContentPage })));
 const SettingsPage = lazy(() => import('./pages/Settings').then(module => ({ default: module.SettingsPage })));

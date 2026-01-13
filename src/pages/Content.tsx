@@ -30,8 +30,7 @@ export function ContentPage() {
     const [content, setContent] = useState<ContentItem[]>([]);
     const [loading, setLoading] = useState(true);
     const [selectedCategory, setSelectedCategory] = useState<string>('All');
-    const [subjects, setSubjects] = useState<string[]>(DEFAULT_SUBJECTS);
-    const [searchQuery, setSearchQuery] = useState('');
+    const subjects = DEFAULT_SUBJECTS;
 
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [newItem, setNewItem] = useState<{ title: string, type: 'Course' | 'Video' | 'Article', category: string }>({

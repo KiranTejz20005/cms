@@ -23,6 +23,7 @@ interface CategoryData {
     name: string;
     value: number;
     color: string;
+    [key: string]: string | number; // Index signature for Recharts compatibility
 }
 
 export function Dashboard() {
@@ -108,7 +109,7 @@ export function Dashboard() {
 
             // Generate activity data for the week (simulated for now)
             const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-            const generatedActivityData = days.map((day, index) => ({
+            const generatedActivityData = days.map((day) => ({
                 name: day,
                 active: Math.floor(Math.random() * 300) + 200,
                 completed: Math.floor(Math.random() * 200) + 100

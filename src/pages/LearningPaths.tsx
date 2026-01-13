@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { Map, Plus, Video, FileText, BookOpen, Users, TrendingUp, MoreVertical, Edit, Trash2, Copy } from 'lucide-react';
+import { useState } from 'react';
+import { Map, Plus, Video, FileText, BookOpen, Users, TrendingUp, Edit, Trash2, Copy } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { containerVariants, itemVariants } from '../lib/animations';
 
@@ -31,9 +31,9 @@ const DEMO_PATHS: LearningPath[] = [
 ];
 
 export function LearningPaths() {
-    const [paths, setPaths] = useState<LearningPath[]>(DEMO_PATHS);
+    const [paths, _setPaths] = useState<LearningPath[]>(DEMO_PATHS);
     const [selectedCategory, setSelectedCategory] = useState('All');
-    const [showCreateModal, setShowCreateModal] = useState(false);
+    const [_showCreateModal, _setShowCreateModal] = useState(false);
 
     const filteredPaths = selectedCategory === 'All'
         ? paths
@@ -71,7 +71,7 @@ export function LearningPaths() {
                         </div>
                     </div>
                     <button
-                        onClick={() => setShowCreateModal(true)}
+                        onClick={() => _setShowCreateModal(true)}
                         className="btn-primary flex items-center gap-2"
                     >
                         <Plus size={20} />

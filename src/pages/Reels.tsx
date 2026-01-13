@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { ChevronRight, Video, Upload, X, PlusCircle, Map, ArrowLeft, Play, Sparkles, BookOpen, Zap, Clock } from 'lucide-react';
+import { ChevronRight, Video, Upload, X, PlusCircle, Map, ArrowLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 // --- Types & Mock Data ---
