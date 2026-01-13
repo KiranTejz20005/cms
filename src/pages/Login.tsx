@@ -13,33 +13,42 @@ export function Login() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
-    const { refreshAuth, isAuthenticated } = useAuth();
+    const { refreshAuth, isAuthenticated, loading: authLoading } = useAuth();
 
     // Handle OAuth callback and auto-redirect if already authenticated
     useEffect(() => {
-        // Handle OAuth callback (hash in URL)
+        // Don't do anything while auth is still initializing
+        if (authLoading) {
+            return;
+        }
+
+        // If authenticated, redirect to dashboard
+        if (isAuthenticated) {
+            console.log('User authenticated, redirecting to dashboard');
+            navigate('/', { replace: true });
+            return;
+        }
+
+        // Check for OAuth callback hash
         const hash = window.location.hash;
         if (hash && hash.includes('access_token')) {
+            console.log('OAuth callback detected, processing...');
             setLoading(true);
 
-            // Clean the URL immediately to prevent re-processing
+            // Clean URL immediately
             window.history.replaceState(null, '', window.location.pathname);
 
-            // Give AuthContext time to process the OAuth callback
+            // Wait for AuthContext to process
             const timer = setTimeout(async () => {
+                console.log('Refreshing auth after OAuth...');
                 await refreshAuth();
-                // Force navigation to dashboard
-                window.location.href = '/';
-            }, 800);
+                setLoading(false);
+                // Navigation will happen automatically when isAuthenticated becomes true
+            }, 1200);
 
             return () => clearTimeout(timer);
         }
-
-        // Check if user is already authenticated and redirect
-        if (isAuthenticated) {
-            navigate('/', { replace: true });
-        }
-    }, [isAuthenticated, navigate, refreshAuth]);
+    }, [isAuthenticated, authLoading, navigate, refreshAuth]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
