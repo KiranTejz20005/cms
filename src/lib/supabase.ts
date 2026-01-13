@@ -21,5 +21,13 @@ if (!isSupabaseConfigured) {
 // The client will simply fail API calls gracefully
 export const supabase: SupabaseClient = createClient(
     supabaseUrl || 'https://placeholder.supabase.co',
-    supabaseAnonKey || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.placeholder'
-);
+    supabaseAnonKey || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.placeholder',
+    {
+        auth: {
+            // Ensure OAuth callbacks with hash are handled properly
+            flowType: 'pkce',
+            autoRefreshToken: true,
+            persistSession: true,
+            detectSessionInUrl: true
+        }
+    }

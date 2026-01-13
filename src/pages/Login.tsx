@@ -32,23 +32,20 @@ export function Login() {
         // Check for OAuth callback hash
         const hash = window.location.hash;
         if (hash && hash.includes('access_token')) {
-            console.log('OAuth callback detected, processing...');
+            console.log('OAuth callback detected, waiting for auth to process...');
             setLoading(true);
-
-            // Clean URL immediately
-            window.history.replaceState(null, '', window.location.pathname);
-
-            // Wait for AuthContext to process
-            const timer = setTimeout(async () => {
-                console.log('Refreshing auth after OAuth...');
-                await refreshAuth();
+            
+            // Wait for Supabase to process the token
+            const timer = setTimeout(() => {
+                console.log('OAuth token processing complete');
+                // AuthContext should have already picked it up via onAuthStateChange
+                // This setTimeout just ensures the auth state updates
                 setLoading(false);
-                // Navigation will happen automatically when isAuthenticated becomes true
-            }, 1200);
+            }, 2000);
 
             return () => clearTimeout(timer);
         }
-    }, [isAuthenticated, authLoading, navigate, refreshAuth]);
+    }, [isAuthenticated, authLoading, navigate]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -247,11 +244,12 @@ export function Login() {
                     <button
                         type="button"
                         onClick={() => {
-                            const redirectUrl = window.location.origin;
+                            const redirectUrl = `${window.location.origin}/login`;
                             supabase.auth.signInWithOAuth({
                                 provider: 'google',
                                 options: {
-                                    redirectTo: redirectUrl
+                                    redirectTo: redirectUrl,
+                                    skipBrowserRedirect: false
                                 }
                             });
                         }}

@@ -98,7 +98,7 @@ export function ReelsPage() {
         } finally {
             setLoading(false);
         }
-    };
+    };;
 
     // --- Handlers ---
     const handleGradeSelect = (grade: string) => setSelectedGrade(grade);

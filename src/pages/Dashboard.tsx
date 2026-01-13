@@ -46,18 +46,33 @@ export function Dashboard() {
         try {
             setLoading(true);
 
+            let usersCount = 0;
+            let contentCount = 0;
+
             // Fetch users count
-            const { count: usersCount } = await supabase
+            const { count: uc, error: usersError } = await supabase
                 .from('profiles')
                 .select('*', { count: 'exact', head: true });
+            
+            if (!usersError) {
+                usersCount = uc || 0;
+            } else {
+                console.warn('Could not fetch users count:', usersError.message);
+            }
 
             // Fetch content count
-            const { count: contentCount } = await supabase
+            const { count: cc, error: contentError } = await supabase
                 .from('content')
                 .select('*', { count: 'exact', head: true });
+            
+            if (!contentError) {
+                contentCount = cc || 0;
+            } else {
+                console.warn('Could not fetch content count:', contentError.message);
+            }
 
             // Fetch content by category for pie chart
-            const { data: contentByCategory } = await supabase
+            const { data: contentByCategory, error: catError } = await supabase
                 .from('content')
                 .select('category');
 
@@ -72,9 +87,11 @@ export function Dashboard() {
             };
 
             const categoryCounts: { [key: string]: number } = {};
-            contentByCategory?.forEach((item: any) => {
-                categoryCounts[item.category] = (categoryCounts[item.category] || 0) + 1;
-            });
+            if (!catError && contentByCategory) {
+                contentByCategory.forEach((item: any) => {
+                    categoryCounts[item.category] = (categoryCounts[item.category] || 0) + 1;
+                });
+            }
 
             const processedCategoryData = Object.entries(categoryCounts).map(([name, value]) => ({
                 name,
@@ -83,14 +100,16 @@ export function Dashboard() {
             }));
 
             // Fetch content by type for engagement chart
-            const { data: contentByType } = await supabase
+            const { data: contentByType, error: typeError } = await supabase
                 .from('content')
                 .select('type');
 
             const typeCounts: { [key: string]: number } = {};
-            contentByType?.forEach((item: any) => {
-                typeCounts[item.type] = (typeCounts[item.type] || 0) + 1;
-            });
+            if (!typeError && contentByType) {
+                contentByType.forEach((item: any) => {
+                    typeCounts[item.type] = (typeCounts[item.type] || 0) + 1;
+                });
+            }
 
             const typeColors: { [key: string]: string } = {
                 'Video': '#8b5cf6',
@@ -116,21 +135,30 @@ export function Dashboard() {
             }));
 
             // Calculate engagement (total interactions)
-            const totalEngagement = (usersCount || 0) * 10 + (contentCount || 0) * 5;
+            const totalEngagement = usersCount * 10 + contentCount * 5;
 
             setStats({
-                totalUsers: usersCount || 0,
-                contentItems: contentCount || 0,
+                totalUsers: usersCount,
+                contentItems: contentCount,
                 engagement: totalEngagement,
-                activeSessions: Math.floor((usersCount || 0) * 0.27) // Simulated: ~27% of users active
+                activeSessions: Math.floor(usersCount * 0.27) // Simulated: ~27% of users active
             });
 
             setActivityData(generatedActivityData);
-            setCategoryData(processedCategoryData);
-            setEngagementData(processedEngagementData);
+            setCategoryData(processedCategoryData.length > 0 ? processedCategoryData : [
+                { name: 'No Data', value: 0, color: '#6b7280' }
+            ]);
+            setEngagementData(processedEngagementData.length > 0 ? processedEngagementData : [
+                { name: 'No Data', value: 0, color: '#6b7280' }
+            ]);
 
         } catch (error) {
             console.error('Error fetching dashboard data:', error);
+            // Set default empty data
+            setStats({ totalUsers: 0, contentItems: 0, engagement: 0, activeSessions: 0 });
+            setActivityData([]);
+            setCategoryData([{ name: 'No Data', value: 0, color: '#6b7280' }]);
+            setEngagementData([{ name: 'No Data', value: 0, color: '#6b7280' }]);
         } finally {
             setLoading(false);
         }

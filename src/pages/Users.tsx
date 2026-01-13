@@ -57,13 +57,13 @@ export function UsersPage() {
                 allUsers = [...allUsers, ...sUsers];
             }
         } catch (e) {
-
+            console.warn('Could not fetch users from Strapi:', e);
         }
 
         // 2. Fetch from Supabase
         try {
-            const { data: sbData } = await supabase.from('profiles').select('*');
-            if (sbData) {
+            const { data: sbData, error: sbError } = await supabase.from('profiles').select('*');
+            if (!sbError && sbData) {
                 const sbUsers = sbData.map(u => ({
                     id: u.id,
                     email: u.email,
@@ -73,9 +73,11 @@ export function UsersPage() {
                     authProvider: 'Supabase' as const
                 }));
                 allUsers = [...allUsers, ...sbUsers];
+            } else if (sbError) {
+                console.warn('Could not fetch users from Supabase:', sbError.message);
             }
         } catch (e) {
-
+            console.warn('Supabase fetch error:', e);
         }
 
         // 3. If no users found, use comprehensive dummy data

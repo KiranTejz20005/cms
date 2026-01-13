@@ -22,14 +22,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const initAuth = async () => {
         try {
+            // 0. Check for OAuth callback in URL hash
+            const hash = window.location.hash;
+            if (hash && hash.includes('access_token')) {
+                console.log('OAuth callback detected in initAuth, letting Supabase handle it...');
+                // Let Supabase process it through onAuthStateChange
+                // Just wait a bit for Supabase to do its thing
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+
             // 1. Check Supabase Session
             const { data: { session } } = await supabase.auth.getSession();
 
             if (session) {
+                console.log('Supabase session found:', session.user.email);
                 setSession(session);
                 setUser(session.user);
                 await fetchRole(session.user.id);
                 setLoading(false);
+                // Clean URL after successful auth
+                if (hash && hash.includes('access_token')) {
+                    window.history.replaceState(null, '', window.location.pathname);
+                }
                 return;
             }
 
