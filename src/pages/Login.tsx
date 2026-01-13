@@ -19,6 +19,7 @@ export function Login() {
     useEffect(() => {
         // Don't do anything while auth is still initializing
         if (authLoading) {
+            console.log('Auth still loading...');
             return;
         }
 
@@ -60,9 +61,13 @@ export function Login() {
             };
             localStorage.setItem('guest_mode', 'true');
             localStorage.setItem('guest_user', JSON.stringify(guestUser));
+            console.log('Guest mode activated, navigating to dashboard');
+            
+            // Refresh auth state and navigate
             await refreshAuth();
-            console.log('Guest mode activated');
+            navigate('/', { replace: true });
         } catch (err: any) {
+            console.error('Guest mode error:', err);
             setError(err.message || 'Failed to enter guest mode');
             setLoading(false);
         }

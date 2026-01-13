@@ -59,18 +59,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                         email: `guest-${Date.now()}@guest.local`,
                         user_metadata: { full_name: 'Guest User' },
                         app_metadata: { provider: 'guest' },
-                        aud: 'guest'
+                        aud: 'guest',
+                        created_at: new Date().toISOString()
                     };
                     setUser(guestUser as any);
                     setSession(null);
                     setRole('user');
+                    console.log('Guest mode user loaded:', guestUser.email);
                     setLoading(false);
-                    console.log('Guest mode activated');
                     return;
                 } catch (e) {
                     console.error("Failed to parse guest user", e);
                     localStorage.removeItem('guest_mode');
                     localStorage.removeItem('guest_user');
+                    // Continue to next fallback
                 }
             }
 
@@ -176,10 +178,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                     setLoading(false);
                 } else {
                     if (_event === 'SIGNED_OUT') {
-                        setSession(null);
-                        setUser(null);
-                        setRole(null);
-                        setLoading(false);
+                        // Check if we're in guest mode before clearing everything
+                        const guestMode = localStorage.getItem('guest_mode');
+                        if (guestMode !== 'true') {
+                            setSession(null);
+                            setUser(null);
+                            setRole(null);
+                            setLoading(false);
+                        }
                     }
                 }
             }
