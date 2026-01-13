@@ -49,7 +49,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 return;
             }
 
-            // 2. Fallback to Strapi (Local Storage)
+            // 2. Check for Guest Mode
+            const guestMode = localStorage.getItem('guest_mode');
+            if (guestMode === 'true') {
+                const guestUserStr = localStorage.getItem('guest_user');
+                try {
+                    const guestUser = guestUserStr ? JSON.parse(guestUserStr) : {
+                        id: `guest-${Date.now()}`,
+                        email: `guest-${Date.now()}@guest.local`,
+                        user_metadata: { full_name: 'Guest User' },
+                        app_metadata: { provider: 'guest' },
+                        aud: 'guest'
+                    };
+                    setUser(guestUser as any);
+                    setSession(null);
+                    setRole('user');
+                    setLoading(false);
+                    console.log('Guest mode activated');
+                    return;
+                } catch (e) {
+                    console.error("Failed to parse guest user", e);
+                    localStorage.removeItem('guest_mode');
+                    localStorage.removeItem('guest_user');
+                }
+            }
+
+            // 3. Fallback to Strapi (Local Storage)
             const strapiJwt = localStorage.getItem('strapi_jwt');
             if (strapiJwt) {
                 const strapiUserStr = localStorage.getItem('strapi_user');
@@ -76,7 +101,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 }
             }
 
-            // 3. FINAL FALLBACK: Manual Hash Parsing (The "Fix It Bruhh" Protocol)
+            // 4. FINAL FALLBACK: Manual Hash Parsing (The "Fix It Bruhh" Protocol)
             // If Supabase failed to catch the session (e.g. wrong Anon Key), we catch it manually.
             if (hash && hash.includes('access_token')) {
                 // Extract params
@@ -186,6 +211,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         localStorage.removeItem('strapi_jwt'); // Clear Strapi
         localStorage.removeItem('strapi_user');
         localStorage.removeItem('user_role');
+        localStorage.removeItem('guest_mode'); // Clear Guest Mode
+        localStorage.removeItem('guest_user');
         setRole(null);
         setUser(null);
         setSession(null);

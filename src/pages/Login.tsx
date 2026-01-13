@@ -47,6 +47,27 @@ export function Login() {
         }
     }, [isAuthenticated, authLoading, navigate]);
 
+    const handleGuestMode = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            const guestUser = {
+                id: `guest-${Date.now()}`,
+                email: `guest-${Date.now()}@guest.local`,
+                user_metadata: { full_name: 'Guest User' },
+                app_metadata: { provider: 'guest' },
+                aud: 'guest'
+            };
+            localStorage.setItem('guest_mode', 'true');
+            localStorage.setItem('guest_user', JSON.stringify(guestUser));
+            await refreshAuth();
+            console.log('Guest mode activated');
+        } catch (err: any) {
+            setError(err.message || 'Failed to enter guest mode');
+            setLoading(false);
+        }
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
@@ -262,6 +283,21 @@ export function Login() {
                             <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
                         </svg>
                         <span className="font-semibold text-text-primary">Sign in with Google</span>
+                    </button>
+
+                    {/* Guest Mode Button */}
+                    <button
+                        type="button"
+                        onClick={handleGuestMode}
+                        disabled={loading}
+                        className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-success/10 border border-success/30 rounded-lg hover:bg-success/20 transition-all duration-200"
+                    >
+                        {loading ? (
+                            <Loader className="animate-spin" size={18} />
+                        ) : (
+                            <span className="text-lg">👤</span>
+                        )}
+                        <span className="font-semibold text-success">Continue as Guest</span>
                     </button>
 
                     {/* Sign Up Link */}
