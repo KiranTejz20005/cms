@@ -1,10 +1,10 @@
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Users, Settings, LogOut, ChevronLeft, ChevronRight, Layers, PlaySquare, Map, Trophy, BarChart2, X, Menu } from 'lucide-react';
+import { LayoutDashboard, Users, Settings, LogOut, ChevronLeft, ChevronRight, Layers, PlaySquare, Map, Trophy, BarChart2, X } from 'lucide-react';
 import clsx from 'clsx';
 import { useConfig } from '../context/ConfigContext';
 import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { slideVariants, tapScale } from '../lib/animations';
 
 interface SidebarProps {
@@ -12,16 +12,154 @@ interface SidebarProps {
     setCollapsed: (v: boolean) => void;
 }
 
+interface SidebarContentProps {
+    collapsed: boolean;
+    platformName: string;
+    navItems: Array<{ label: string; path: string; icon: any }>;
+    location: any;
+    user: any;
+    role: string | null;
+    signOut: () => Promise<void>;
+}
+
+// Move SidebarContent outside to avoid recreation on every render
+function SidebarContent({ collapsed, platformName, navItems, location, user, role, signOut }: SidebarContentProps) {
+    return (
+        <>
+            {/* Logo Area */}
+            <div className="h-16 flex items-center px-6 border-b border-border shrink-0">
+                <div className="w-9 h-9 bg-gradient-to-br from-primary to-primary-600 rounded-lg shrink-0 shadow-sm" />
+                <AnimatePresence mode="wait">
+                    {!collapsed && (
+                        <motion.span
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: -10 }}
+                            transition={{ duration: 0.2 }}
+                            className="ml-3 font-header font-bold text-xl text-text-primary whitespace-nowrap"
+                        >
+                            {platformName}
+                        </motion.span>
+                    )}
+                </AnimatePresence>
+            </div>
+
+            {/* Navigation */}
+            <nav className="flex-1 overflow-y-auto py-6 px-3 space-y-1">
+                {navItems.map((item) => {
+                    const Icon = item.icon;
+                    const isActive = location.pathname === item.path;
+                    return (
+                        <Link
+                            key={item.path}
+                            to={item.path}
+                            className={clsx(
+                                "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group relative",
+                                isActive
+                                    ? "bg-primary text-white shadow-sm"
+                                    : "text-text-secondary hover:bg-background-secondary hover:text-text-primary"
+                            )}
+                        >
+                            <Icon
+                                size={20}
+                                className={clsx(
+                                    "shrink-0 transition-transform group-hover:scale-110",
+                                    isActive ? "text-white" : ""
+                                )}
+                            />
+                            <AnimatePresence mode="wait">
+                                {!collapsed && (
+                                    <motion.span
+                                        initial={{ opacity: 0, x: -10 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        exit={{ opacity: 0, x: -10 }}
+                                        transition={{ duration: 0.2 }}
+                                        className="font-medium text-sm whitespace-nowrap"
+                                    >
+                                        {item.label}
+                                    </motion.span>
+                                )}
+                            </AnimatePresence>
+                            {isActive && (
+                                <motion.div
+                                    layoutId="activeTab"
+                                    className="absolute inset-0 bg-primary rounded-lg -z-10"
+                                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                                />
+                            )}
+                        </Link>
+                    );
+                })}
+            </nav>
+
+            {/* User Section */}
+            <div className="border-t border-border p-4 space-y-2 shrink-0">
+                <div className={clsx("flex items-center gap-3", collapsed && "justify-center")}>
+                    <div className="w-9 h-9 bg-gradient-to-br from-primary-100 to-primary-200 rounded-full flex items-center justify-center text-primary font-semibold shrink-0">
+                        {user?.email?.[0]?.toUpperCase() || 'U'}
+                    </div>
+                    <AnimatePresence mode="wait">
+                        {!collapsed && (
+                            <motion.div
+                                initial={{ opacity: 0, x: -10 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -10 }}
+                                transition={{ duration: 0.2 }}
+                                className="flex-1 min-w-0"
+                            >
+                                <p className="text-sm font-medium text-text-primary truncate">
+                                    {user?.email || 'User'}
+                                </p>
+                                <p className="text-xs text-text-tertiary capitalize">{role || 'user'}</p>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </div>
+                <motion.button
+                    whileTap={tapScale}
+                    onClick={signOut}
+                    className={clsx(
+                        "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-error hover:bg-error-light transition-colors",
+                        collapsed && "justify-center"
+                    )}
+                    title="Sign Out"
+                >
+                    <LogOut size={18} />
+                    <AnimatePresence mode="wait">
+                        {!collapsed && (
+                            <motion.span
+                                initial={{ opacity: 0, x: -10 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -10 }}
+                                transition={{ duration: 0.2 }}
+                                className="text-sm font-medium"
+                            >
+                                Sign Out
+                            </motion.span>
+                        )}
+                    </AnimatePresence>
+                </motion.button>
+            </div>
+        </>
+    );
+}
+
 export function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
     const { platformName } = useConfig();
     const { signOut, user, role } = useAuth();
     const location = useLocation();
     const [mobileOpen, setMobileOpen] = useState(false);
+    const prevPathRef = useRef(location.pathname);
 
-    // Close mobile menu on route change
+    // Close mobile menu on route change using ref to avoid direct setState in effect
     useEffect(() => {
-        setMobileOpen(false);
-    }, [location.pathname]);
+        if (prevPathRef.current !== location.pathname) {
+            prevPathRef.current = location.pathname;
+            if (mobileOpen) {
+                setMobileOpen(false);
+            }
+        }
+    }, [location.pathname, mobileOpen]);
 
     // Close mobile menu on escape key
     useEffect(() => {
@@ -43,146 +181,26 @@ export function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
         { label: 'Settings', path: '/settings', icon: Settings },
     ];
 
-    const SidebarContent = () => (
-        <>
-            {/* Logo Area */}
-            <div className="h-16 flex items-center px-6 border-b border-border shrink-0">
-                <div className="w-9 h-9 bg-gradient-to-br from-primary to-primary-600 rounded-lg shrink-0 shadow-sm" />
-                <motion.span
-                    initial={false}
-                    animate={{ opacity: collapsed ? 0 : 1, width: collapsed ? 0 : 'auto' }}
-                    transition={{ duration: 0.2 }}
-                    className={clsx("ml-3 font-header font-bold text-xl text-text-primary overflow-hidden whitespace-nowrap", collapsed && "hidden")}
-                >
-                    {platformName}
-                </motion.span>
-            </div>
-
-            {/* Nav Items */}
-            <nav className="flex-1 py-4 px-3 space-y-1 overflow-y-auto scrollbar-hide">
-                {navItems.map((item, idx) => {
-                    const isActive = location.pathname === item.path;
-                    return (
-                        <motion.div
-                            key={item.label}
-                            initial={{ opacity: 0, x: -10 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: idx * 0.03, duration: 0.2 }}
-                        >
-                            <Link
-                                to={item.path}
-                                className={clsx(
-                                    "relative flex items-center px-3 py-2.5 rounded-lg transition-all duration-200 group",
-                                    isActive
-                                        ? "bg-primary text-white shadow-sm"
-                                        : "text-text-secondary hover:bg-background-secondary hover:text-text-primary"
-                                )}
-                                aria-current={isActive ? 'page' : undefined}
-                            >
-                                {isActive && (
-                                    <motion.div
-                                        layoutId="activeNav"
-                                        className="absolute inset-0 bg-primary rounded-lg"
-                                        transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                                    />
-                                )}
-                                <item.icon
-                                    size={20}
-                                    className={clsx("shrink-0 relative z-10", isActive && "text-white")}
-                                    aria-hidden="true"
-                                />
-                                <motion.span
-                                    initial={false}
-                                    animate={{ opacity: collapsed ? 0 : 1, width: collapsed ? 0 : 'auto' }}
-                                    transition={{ duration: 0.2 }}
-                                    className={clsx("ml-3 font-medium text-sm overflow-hidden whitespace-nowrap relative z-10", collapsed && "hidden")}
-                                >
-                                    {item.label}
-                                </motion.span>
-
-                                {/* Tooltip for collapsed state */}
-                                {collapsed && (
-                                    <div className="absolute left-full ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-50 transition-opacity">
-                                        {item.label}
-                                    </div>
-                                )}
-                            </Link>
-                        </motion.div>
-                    );
-                })}
-            </nav>
-
-            {/* User Info */}
-            <div className="p-4 border-t border-border shrink-0">
-                <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 shrink-0 flex items-center justify-center font-bold text-white shadow-sm">
-                        {user?.email?.substring(0, 2).toUpperCase() || 'U'}
-                    </div>
-                    <motion.div
-                        initial={false}
-                        animate={{ opacity: collapsed ? 0 : 1, width: collapsed ? 0 : 'auto' }}
-                        transition={{ duration: 0.2 }}
-                        className={clsx("flex-1 min-w-0", collapsed && "hidden")}
-                    >
-                        <p className="text-sm font-semibold text-text-primary truncate">
-                            {user?.email?.split('@')[0] || 'User'}
-                        </p>
-                        <p className="text-xs text-text-secondary truncate capitalize">
-                            {role || 'Guest'}
-                        </p>
-                    </motion.div>
-                    <motion.button
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={tapScale}
-                        onClick={() => signOut()}
-                        className={clsx("text-text-tertiary hover:text-error transition-colors", collapsed && "hidden")}
-                        title="Sign Out"
-                        aria-label="Sign out"
-                    >
-                        <LogOut size={18} />
-                    </motion.button>
-                </div>
-            </div>
-        </>
-    );
-
     return (
         <>
-            {/* Mobile Menu Button */}
-            <motion.button
-                whileTap={tapScale}
-                onClick={() => setMobileOpen(true)}
-                className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-surface rounded-lg shadow-md border border-border text-text-primary"
-                aria-label="Open menu"
-            >
-                <Menu size={20} />
-            </motion.button>
-
-            {/* Mobile Overlay */}
-            <AnimatePresence>
-                {mobileOpen && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        onClick={() => setMobileOpen(false)}
-                        className="lg:hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
-                        aria-hidden="true"
-                    />
-                )}
-            </AnimatePresence>
-
             {/* Desktop Sidebar */}
             <motion.aside
-                initial={{ x: -256 }}
-                animate={{ x: 0 }}
-                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                animate={{ width: collapsed ? 80 : 256 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
                 className={clsx(
                     "hidden lg:flex h-screen bg-surface border-r border-border transition-all duration-300 flex-col relative z-20",
                     collapsed ? "w-20" : "w-64"
                 )}
             >
-                <SidebarContent />
+                <SidebarContent
+                    collapsed={collapsed}
+                    platformName={platformName}
+                    navItems={navItems}
+                    location={location}
+                    user={user}
+                    role={role}
+                    signOut={signOut}
+                />
 
                 {/* Collapse Toggle */}
                 <motion.button
@@ -221,7 +239,15 @@ export function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
                             </motion.button>
                         </div>
                         <div className="flex-1 overflow-hidden flex flex-col">
-                            <SidebarContent />
+                            <SidebarContent
+                                collapsed={false}
+                                platformName={platformName}
+                                navItems={navItems}
+                                location={location}
+                                user={user}
+                                role={role}
+                                signOut={signOut}
+                            />
                         </div>
                     </motion.aside>
                 )}
