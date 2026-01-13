@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { useNavigate, Link } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -13,7 +13,27 @@ export function Login() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
-    const { refreshAuth } = useAuth();
+    const { refreshAuth, isAuthenticated } = useAuth();
+
+    // Handle OAuth callback and auto-redirect if already authenticated
+    useEffect(() => {
+        // Check if user is already authenticated
+        if (isAuthenticated) {
+            navigate('/');
+            return;
+        }
+
+        // Handle OAuth callback (hash in URL)
+        const hash = window.location.hash;
+        if (hash && hash.includes('access_token')) {
+            setLoading(true);
+            // Give AuthContext time to process the OAuth callback
+            setTimeout(async () => {
+                await refreshAuth();
+                navigate('/');
+            }, 500);
+        }
+    }, [isAuthenticated, navigate, refreshAuth]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -33,6 +53,8 @@ export function Login() {
 
             if (!supabaseError) {
                 success = true;
+                // Wait for auth state to update
+                await refreshAuth();
             } else {
                 console.log("Supabase login failed, trying Strapi due to:", supabaseError.message);
                 // 2. Try Strapi Login
@@ -54,7 +76,10 @@ export function Login() {
             }
 
             if (success) {
-                navigate('/');
+                // Small delay to ensure auth state is updated
+                setTimeout(() => {
+                    navigate('/');
+                }, 100);
             }
         } catch (err: any) {
             setError(err.message || 'Login failed');
