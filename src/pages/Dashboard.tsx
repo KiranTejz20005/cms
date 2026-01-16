@@ -198,34 +198,50 @@ export function Dashboard() {
             {/* Top Stats Row */}
             <motion.div
                 variants={containerVariants}
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
             >
                 {[
-                    { label: 'Total Users', value: stats.totalUsers.toLocaleString(), icon: Users, color: 'text-blue-600', bg: 'bg-blue-50', trend: '+12%', trendUp: true },
-                    { label: 'Content Items', value: stats.contentItems.toLocaleString(), icon: BookOpen, color: 'text-purple-600', bg: 'bg-purple-50', trend: '+5%', trendUp: true },
-                    { label: 'Engagement', value: stats.engagement >= 1000 ? `${(stats.engagement / 1000).toFixed(1)}k` : stats.engagement.toString(), icon: Zap, color: 'text-amber-600', bg: 'bg-amber-50', trend: '+18%', trendUp: true },
-                    { label: 'Active Sessions', value: stats.activeSessions.toLocaleString(), icon: TrendingUp, color: 'text-teal-600', bg: 'bg-teal-50', trend: '+8%', trendUp: true },
+                    { label: 'Total Users', value: stats.totalUsers.toLocaleString(), icon: Users, color: 'text-blue-600', bg: 'bg-gradient-to-br from-blue-50 to-blue-100', ring: 'ring-blue-200', trend: '+12%', trendUp: true },
+                    { label: 'Content Items', value: stats.contentItems.toLocaleString(), icon: BookOpen, color: 'text-purple-600', bg: 'bg-gradient-to-br from-purple-50 to-purple-100', ring: 'ring-purple-200', trend: '+5%', trendUp: true },
+                    { label: 'Engagement', value: stats.engagement >= 1000 ? `${(stats.engagement / 1000).toFixed(1)}k` : stats.engagement.toString(), icon: Zap, color: 'text-amber-600', bg: 'bg-gradient-to-br from-amber-50 to-amber-100', ring: 'ring-amber-200', trend: '+18%', trendUp: true },
+                    { label: 'Active Sessions', value: stats.activeSessions.toLocaleString(), icon: TrendingUp, color: 'text-teal-600', bg: 'bg-gradient-to-br from-teal-50 to-teal-100', ring: 'ring-teal-200', trend: '+8%', trendUp: true },
                 ].map((stat, i) => (
                     <motion.div
                         variants={itemVariants}
-                        whileHover={{ y: -5, scale: 1.02 }}
+                        whileHover={{ y: -8, scale: 1.03 }}
                         key={i}
-                        className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300"
+                        className="bg-white/90 backdrop-blur-sm p-6 rounded-2xl border border-gray-100 shadow-lg hover:shadow-xl transition-all duration-300 ring-1 ring-transparent hover:ring-2"
                     >
                         <div className="flex justify-between items-start">
                             <div>
-                                <p className="text-sm font-medium text-text-secondary">{stat.label}</p>
-                                <h3 className="text-3xl font-bold text-text-primary mt-2">{stat.value}</h3>
+                                <p className="text-xs font-semibold text-text-tertiary uppercase tracking-wide">{stat.label}</p>
+                                <motion.h3 
+                                    className="text-4xl font-bold text-text-primary mt-3"
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: 1 }}
+                                    transition={{ type: "spring", delay: i * 0.1 }}
+                                >
+                                    {stat.value}
+                                </motion.h3>
                             </div>
-                            <div className={`p-3 rounded-xl ${stat.bg} ${stat.color}`}>
-                                <stat.icon size={22} />
-                            </div>
+                            <motion.div 
+                                className={`p-3 rounded-2xl ${stat.bg} ${stat.color} ring-2 ${stat.ring}`}
+                                whileHover={{ rotate: 360, scale: 1.1 }}
+                                transition={{ duration: 0.6 }}
+                            >
+                                <stat.icon size={24} strokeWidth={2.5} />
+                            </motion.div>
                         </div>
-                        <div className="mt-4 flex items-center text-xs">
-                            <span className={`font-bold px-2 py-0.5 rounded-full mr-2 ${stat.trendUp ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                        <div className="mt-5 flex items-center text-xs">
+                            <motion.span 
+                                className={`font-bold px-2.5 py-1 rounded-full mr-2 ${stat.trendUp ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}`}
+                                initial={{ x: -20, opacity: 0 }}
+                                animate={{ x: 0, opacity: 1 }}
+                                transition={{ delay: i * 0.1 + 0.2 }}
+                            >
                                 {stat.trend}
-                            </span>
-                            <span className="text-text-secondary">vs last week</span>
+                            </motion.span>
+                            <span className="text-text-tertiary font-medium">vs last week</span>
                         </div>
                     </motion.div>
                 ))}
