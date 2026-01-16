@@ -118,14 +118,14 @@ export function CategoriesPage() {
             {/* Header */}
             <motion.div variants={itemVariants} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-text-primary tracking-tight">Categories</h1>
-                    <p className="text-text-secondary mt-1">Organize your content into meaningful categories</p>
+                    <h1 className="text-4xl font-bold text-text-primary tracking-tight bg-gradient-to-r from-primary to-primary-600 bg-clip-text text-transparent">Categories</h1>
+                    <p className="text-text-secondary mt-2 font-medium">Organize your content into meaningful categories</p>
                 </div>
                 <motion.button
-                    whileHover={{ scale: 1.02 }}
+                    whileHover={{ scale: 1.05, y: -2 }}
                     whileTap={tapScale}
                     onClick={() => setShowCreateModal(true)}
-                    className="btn-primary flex items-center gap-2"
+                    className="btn-primary flex items-center gap-2 shadow-lg"
                 >
                     <Plus size={20} />
                     <span>Create Category</span>
