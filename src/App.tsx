@@ -7,17 +7,18 @@ import { Loader } from 'lucide-react';
 // Lazy load pages for better performance
 const DashboardLayout = lazy(() => import('./layouts/DashboardLayout').then(module => ({ default: module.DashboardLayout })));
 const Dashboard = lazy(() => import('./pages/Dashboard').then(module => ({ default: module.Dashboard })));
-// Subjects page removed - not currently used
+const CategoriesPage = lazy(() => import('./pages/Categories').then(module => ({ default: module.CategoriesPage })));
+const ItemsPage = lazy(() => import('./pages/Items').then(module => ({ default: module.ItemsPage })));
 const UsersPage = lazy(() => import('./pages/Users').then(module => ({ default: module.UsersPage })));
-const ContentPage = lazy(() => import('./pages/Content').then(module => ({ default: module.ContentPage })));
 const SettingsPage = lazy(() => import('./pages/Settings').then(module => ({ default: module.SettingsPage })));
 const Login = lazy(() => import('./pages/Login').then(module => ({ default: module.Login })));
 const Signup = lazy(() => import('./pages/Signup').then(module => ({ default: module.Signup })));
 const ForgotPassword = lazy(() => import('./pages/ForgotPassword').then(module => ({ default: module.ForgotPassword })));
-const ReelsPage = lazy(() => import('./pages/Reels').then(module => ({ default: module.ReelsPage })));
 const ChallengesPage = lazy(() => import('./pages/Challenges').then(module => ({ default: module.ChallengesPage })));
 const AnalyticsPage = lazy(() => import('./pages/Analytics').then(module => ({ default: module.AnalyticsPage })));
 const LearningPaths = lazy(() => import('./pages/LearningPaths').then(module => ({ default: module.LearningPaths })));
+const ByteSizedLearning = lazy(() => import('./pages/ByteSizedLearning').then(module => ({ default: module.ByteSizedLearning })));
+const WorkshopsPage = lazy(() => import('./pages/Workshops').then(module => ({ default: module.WorkshopsPage })));
 
 // Auth Guard Component
 function RequireAuth({ children }: { children: React.ReactElement }) {
@@ -53,10 +54,12 @@ function App() {
                 </RequireAuth>
               }>
                 <Route index element={<Dashboard />} />
-                <Route path="categories" element={<ContentPage />} /> {/* Reusing Content for Categories */}
-                <Route path="reels" element={<ReelsPage />} />
+                <Route path="byte-sized-learning" element={<ByteSizedLearning />} />
+                <Route path="categories" element={<CategoriesPage />} />
+                <Route path="items" element={<ItemsPage />} />
                 <Route path="learning-paths" element={<LearningPaths />} />
                 <Route path="challenges" element={<ChallengesPage />} />
+                <Route path="workshops" element={<WorkshopsPage />} />
                 <Route path="analytics" element={<AnalyticsPage />} />
                 <Route path="users" element={<UsersPage />} />
                 <Route path="settings" element={<SettingsPage />} />

@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Users, Settings, LogOut, ChevronLeft, ChevronRight, Layers, PlaySquare, Map, Trophy, BarChart2, X } from 'lucide-react';
+import { LayoutDashboard, Users, Settings, LogOut, ChevronLeft, ChevronRight, FolderOpen, Package, Map, Trophy, BarChart2, X, Zap, Presentation } from 'lucide-react';
 import clsx from 'clsx';
 import { useConfig } from '../context/ConfigContext';
 import { useAuth } from '../context/AuthContext';
@@ -172,10 +172,12 @@ export function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
 
     const navItems = [
         { label: 'Home', path: '/', icon: LayoutDashboard },
-        { label: 'Categories', path: '/categories', icon: Layers },
-        { label: 'Byte Sized Learning', path: '/reels', icon: PlaySquare },
+        { label: 'Byte Sized Learning', path: '/byte-sized-learning', icon: Zap },
+        { label: 'Categories', path: '/categories', icon: FolderOpen },
+        { label: 'Items', path: '/items', icon: Package },
         { label: 'Learning Paths', path: '/learning-paths', icon: Map },
         { label: 'Challenges', path: '/challenges', icon: Trophy },
+        { label: 'Workshops', path: '/workshops', icon: Presentation },
         { label: 'Users', path: '/users', icon: Users },
         { label: 'Report/Analytics', path: '/analytics', icon: BarChart2 },
         { label: 'Settings', path: '/settings', icon: Settings },
