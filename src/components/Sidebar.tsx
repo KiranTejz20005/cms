@@ -54,17 +54,17 @@ function SidebarContent({ collapsed, platformName, navItems, location, user, rol
                             key={item.path}
                             to={item.path}
                             className={clsx(
-                                "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group relative",
+                                "flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200 group relative",
                                 isActive
-                                    ? "bg-primary text-white shadow-sm"
-                                    : "text-text-secondary hover:bg-background-secondary hover:text-text-primary"
+                                    ? "bg-gradient-to-r from-primary to-primary-600 text-white shadow-lg shadow-primary/30"
+                                    : "text-text-secondary hover:bg-gradient-to-r hover:from-primary/10 hover:to-primary/5 hover:text-primary"
                             )}
                         >
                             <Icon
                                 size={20}
                                 className={clsx(
-                                    "shrink-0 transition-transform group-hover:scale-110",
-                                    isActive ? "text-white" : ""
+                                    "shrink-0 transition-all group-hover:scale-110",
+                                    isActive ? "text-white" : "group-hover:text-primary"
                                 )}
                             />
                             <AnimatePresence mode="wait">
@@ -74,7 +74,7 @@ function SidebarContent({ collapsed, platformName, navItems, location, user, rol
                                         animate={{ opacity: 1, x: 0 }}
                                         exit={{ opacity: 0, x: -10 }}
                                         transition={{ duration: 0.2 }}
-                                        className="font-medium text-sm whitespace-nowrap"
+                                        className="font-semibold text-sm whitespace-nowrap"
                                     >
                                         {item.label}
                                     </motion.span>
@@ -83,7 +83,7 @@ function SidebarContent({ collapsed, platformName, navItems, location, user, rol
                             {isActive && (
                                 <motion.div
                                     layoutId="activeTab"
-                                    className="absolute inset-0 bg-primary rounded-lg -z-10"
+                                    className="absolute inset-0 bg-gradient-to-r from-primary to-primary-600 rounded-xl -z-10"
                                     transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                                 />
                             )}
