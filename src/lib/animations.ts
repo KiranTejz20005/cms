@@ -94,6 +94,72 @@ export const itemVariants: Variants = {
     },
 };
 
+// Button interaction variants
+export const buttonHoverVariants: Variants = {
+    rest: { scale: 1 },
+    hover: { 
+        scale: 1.05, 
+        transition: { duration: 0.2, ease: easing.smooth } 
+    },
+    tap: { 
+        scale: 0.95,
+        transition: { duration: 0.1 } 
+    }
+};
+
+// Enhanced card animations
+export const cardVariants: Variants = {
+    hidden: {
+        opacity: 0,
+        y: 20,
+        scale: 0.95
+    },
+    visible: {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        transition: {
+            ...smoothSpring,
+            duration: 0.4
+        }
+    },
+    hover: {
+        y: -8,
+        scale: 1.02,
+        transition: {
+            duration: 0.3,
+            ease: easing.smooth
+        }
+    }
+};
+
+// Modal animations
+export const modalVariants: Variants = {
+    hidden: {
+        opacity: 0,
+        scale: 0.9,
+        y: 20
+    },
+    visible: {
+        opacity: 1,
+        scale: 1,
+        y: 0,
+        transition: {
+            duration: 0.3,
+            ease: easing.smooth
+        }
+    },
+    exit: {
+        opacity: 0,
+        scale: 0.95,
+        y: 10,
+        transition: {
+            duration: 0.2,
+            ease: easing.smooth
+        }
+    }
+};
+
 // Fade in variants
 export const fadeInVariants: Variants = {
     hidden: {
@@ -200,24 +266,6 @@ export const listItemVariants: Variants = {
             ...smoothSpring,
         },
     }),
-};
-
-// Card entrance animation
-export const cardVariants: Variants = {
-    hidden: {
-        opacity: 0,
-        y: 20,
-        scale: 0.95,
-    },
-    visible: {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        transition: {
-            ...gentleSpring,
-            opacity: { duration: 0.3 },
-        },
-    },
 };
 
 // Skeleton loader animation
