@@ -252,36 +252,37 @@ export function VideoUpload({ isOpen, onClose, categories, onUploadSuccess }: Vi
         onClose();
     };
 
-    if (!isOpen) return null;
-
     return (
         <AnimatePresence>
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
-                onClick={handleClose}
-            >
+            {isOpen && (
                 <motion.div
-                    initial={{ scale: 0.95, y: 20 }}
-                    animate={{ scale: 1, y: 0 }}
-                    exit={{ scale: 0.95, y: 20 }}
-                    className="bg-surface rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
-                    onClick={(e) => e.stopPropagation()}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+                    onClick={handleClose}
                 >
+                    <motion.div
+                        initial={{ scale: 0.9, y: 20, opacity: 0 }}
+                        animate={{ scale: 1, y: 0, opacity: 1 }}
+                        exit={{ scale: 0.95, y: 10, opacity: 0 }}
+                        transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                        className="bg-surface rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto border border-border"
+                        onClick={(e) => e.stopPropagation()}
+                    >
                     {/* Header */}
-                    <div className="flex items-center justify-between p-6 border-b border-border sticky top-0 bg-surface z-10">
-                        <h2 className="text-xl font-bold text-text-primary">
+                    <div className="flex items-center justify-between p-6 border-b border-border sticky top-0 bg-gradient-to-r from-surface to-background-secondary z-10 rounded-t-2xl">
+                        <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-primary-600 bg-clip-text text-transparent">
                             {step === 'upload' ? 'Upload Video' : 'Video Details'}
                         </h2>
                         <motion.button
-                            whileHover={{ scale: 1.1 }}
+                            whileHover={{ scale: 1.1, rotate: 90 }}
                             whileTap={{ scale: 0.9 }}
                             onClick={handleClose}
-                            className="p-1.5 hover:bg-background-secondary rounded-lg transition-colors"
+                            className="p-2 hover:bg-error/10 text-text-secondary hover:text-error rounded-xl transition-all"
                         >
-                            <X size={20} />
+                            <X size={24} />
                         </motion.button>
                     </div>
 
@@ -519,8 +520,9 @@ export function VideoUpload({ isOpen, onClose, categories, onUploadSuccess }: Vi
                             </motion.button>
                         )}
                     </div>
+                    </motion.div>
                 </motion.div>
-            </motion.div>
+            )}
         </AnimatePresence>
     );
 }
