@@ -28,17 +28,17 @@ export function WorkshopsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-header font-bold text-text-primary">Workshops</h1>
-          <p className="text-text-secondary mt-1">Manage and track workshop registrations</p>
+          <h1 className="text-4xl font-header font-bold text-text-primary bg-gradient-to-r from-primary to-primary-600 bg-clip-text text-transparent">Workshops</h1>
+          <p className="text-text-secondary mt-2 font-medium">Manage and track workshop registrations</p>
         </div>
         <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
+          whileHover={{ scale: 1.05, y: -2 }}
+          whileTap={{ scale: 0.95 }}
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white rounded-lg hover:bg-primary-600 transition-colors shadow-sm"
+          className="flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-primary to-primary-600 text-white rounded-xl hover:shadow-lg hover:shadow-primary/30 transition-all shadow-md font-semibold"
         >
           <Plus size={20} />
-          <span className="font-medium">Create Workshop</span>
+          <span>Create Workshop</span>
         </motion.button>
       </div>
 
@@ -47,18 +47,28 @@ export function WorkshopsPage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-surface p-6 rounded-xl border border-border"
+          whileHover={{ y: -4, scale: 1.02 }}
+          className="bg-gradient-to-br from-white to-blue-50 p-6 rounded-2xl border border-blue-100 shadow-lg hover:shadow-xl transition-all"
         >
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-text-secondary text-sm font-medium">Total Workshops</p>
-              <p className="text-3xl font-bold text-text-primary mt-1">
+              <p className="text-text-secondary text-xs font-semibold uppercase tracking-wide">Total Workshops</p>
+              <motion.p 
+                className="text-4xl font-bold text-text-primary mt-2"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", delay: 0.1 }}
+              >
                 {upcomingWorkshops.length + ongoingWorkshops.length + completedWorkshops.length}
-              </p>
+              </motion.p>
             </div>
-            <div className="w-12 h-12 bg-primary-light rounded-lg flex items-center justify-center">
-              <Calendar className="text-primary" size={24} />
-            </div>
+            <motion.div 
+              className="w-14 h-14 bg-gradient-to-br from-primary to-primary-600 rounded-2xl flex items-center justify-center shadow-lg"
+              whileHover={{ rotate: 360 }}
+              transition={{ duration: 0.6 }}
+            >
+              <Calendar className="text-white" size={28} strokeWidth={2.5} />
+            </motion.div>
           </div>
         </motion.div>
 
@@ -66,16 +76,28 @@ export function WorkshopsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-surface p-6 rounded-xl border border-border"
+          whileHover={{ y: -4, scale: 1.02 }}
+          className="bg-gradient-to-br from-white to-amber-50 p-6 rounded-2xl border border-amber-100 shadow-lg hover:shadow-xl transition-all"
         >
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-text-secondary text-sm font-medium">Ongoing Workshops</p>
-              <p className="text-3xl font-bold text-text-primary mt-1">{ongoingWorkshops.length}</p>
+              <p className="text-text-secondary text-xs font-semibold uppercase tracking-wide">Ongoing Workshops</p>
+              <motion.p 
+                className="text-4xl font-bold text-text-primary mt-2"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", delay: 0.2 }}
+              >
+                {ongoingWorkshops.length}
+              </motion.p>
             </div>
-            <div className="w-12 h-12 bg-warning-light rounded-lg flex items-center justify-center">
-              <Clock className="text-warning" size={24} />
-            </div>
+            <motion.div 
+              className="w-14 h-14 bg-gradient-to-br from-warning to-amber-500 rounded-2xl flex items-center justify-center shadow-lg"
+              whileHover={{ rotate: 360 }}
+              transition={{ duration: 0.6 }}
+            >
+              <Clock className="text-white" size={28} strokeWidth={2.5} />
+            </motion.div>
           </div>
         </motion.div>
 
@@ -83,75 +105,94 @@ export function WorkshopsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-surface p-6 rounded-xl border border-border"
+          whileHover={{ y: -4, scale: 1.02 }}
+          className="bg-gradient-to-br from-white to-emerald-50 p-6 rounded-2xl border border-emerald-100 shadow-lg hover:shadow-xl transition-all"
         >
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-text-secondary text-sm font-medium">Total Enrollments</p>
-              <p className="text-3xl font-bold text-text-primary mt-1">
+              <p className="text-text-secondary text-xs font-semibold uppercase tracking-wide">Total Enrollments</p>
+              <motion.p 
+                className="text-4xl font-bold text-text-primary mt-2"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", delay: 0.3 }}
+              >
                 {currentWorkshops.reduce((acc, w) => acc + w.enrolledCount, 0)}
-              </p>
+              </motion.p>
             </div>
-            <div className="w-12 h-12 bg-warning-light rounded-lg flex items-center justify-center">
-              <Users className="text-warning" size={24} />
-            </div>
+            <motion.div 
+              className="w-14 h-14 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg"
+              whileHover={{ rotate: 360 }}
+              transition={{ duration: 0.6 }}
+            >
+              <Users className="text-white" size={28} strokeWidth={2.5} />
+            </motion.div>
           </div>
         </motion.div>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 border-b border-border">
-        <button
+      <div className="flex gap-2 border-b-2 border-border bg-surface/50 rounded-t-xl p-1">
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
           onClick={() => setActiveTab('upcoming')}
           className={clsx(
-            'px-4 py-2.5 font-medium transition-colors relative',
+            'px-5 py-3 font-semibold transition-all relative rounded-lg',
             activeTab === 'upcoming'
-              ? 'text-primary'
-              : 'text-text-secondary hover:text-text-primary'
+              ? 'text-white bg-gradient-to-r from-primary to-primary-600 shadow-lg'
+              : 'text-text-secondary hover:text-text-primary hover:bg-background-secondary'
           )}
         >
-          Upcoming Workshops ({upcomingWorkshops.length})
+          Upcoming ({upcomingWorkshops.length})
           {activeTab === 'upcoming' && (
             <motion.div
-              layoutId="activeTab"
-              className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"
+              layoutId="activeWorkshopTab"
+              className="absolute inset-0 bg-gradient-to-r from-primary to-primary-600 rounded-lg -z-10"
+              transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
             />
           )}
-        </button>
-        <button
+        </motion.button>
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
           onClick={() => setActiveTab('ongoing')}
           className={clsx(
-            'px-4 py-2.5 font-medium transition-colors relative',
+            'px-5 py-3 font-semibold transition-all relative rounded-lg',
             activeTab === 'ongoing'
-              ? 'text-primary'
-              : 'text-text-secondary hover:text-text-primary'
+              ? 'text-white bg-gradient-to-r from-primary to-primary-600 shadow-lg'
+              : 'text-text-secondary hover:text-text-primary hover:bg-background-secondary'
           )}
         >
-          Ongoing Workshops ({ongoingWorkshops.length})
+          Ongoing ({ongoingWorkshops.length})
           {activeTab === 'ongoing' && (
             <motion.div
-              layoutId="activeTab"
-              className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"
+              layoutId="activeWorkshopTab"
+              className="absolute inset-0 bg-gradient-to-r from-primary to-primary-600 rounded-lg -z-10"
+              transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
             />
           )}
-        </button>
-        <button
+        </motion.button>
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
           onClick={() => setActiveTab('completed')}
           className={clsx(
-            'px-4 py-2.5 font-medium transition-colors relative',
+            'px-5 py-3 font-semibold transition-all relative rounded-lg',
             activeTab === 'completed'
-              ? 'text-primary'
-              : 'text-text-secondary hover:text-text-primary'
+              ? 'text-white bg-gradient-to-r from-primary to-primary-600 shadow-lg'
+              : 'text-text-secondary hover:text-text-primary hover:bg-background-secondary'
           )}
         >
-          Completed Workshops ({completedWorkshops.length})
+          Completed ({completedWorkshops.length})
           {activeTab === 'completed' && (
             <motion.div
-              layoutId="activeTab"
-              className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"
+              layoutId="activeWorkshopTab"
+              className="absolute inset-0 bg-gradient-to-r from-primary to-primary-600 rounded-lg -z-10"
+              transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
             />
           )}
-        </button>
+        </motion.button>
       </div>
 
       {/* Workshops List */}
@@ -205,7 +246,8 @@ function WorkshopCard({ workshop, index, isExpanded, onToggle }: WorkshopCardPro
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05 }}
-      className="bg-surface rounded-xl border border-border overflow-hidden hover:shadow-lg transition-shadow"
+      whileHover={{ y: -4, scale: 1.01 }}
+      className="bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-2xl hover:border-primary/30 transition-all duration-300"
     >
       <div className="p-6">
         <div className="flex flex-col lg:flex-row gap-6">
@@ -319,15 +361,22 @@ function WorkshopCard({ workshop, index, isExpanded, onToggle }: WorkshopCardPro
             </div>
 
             {/* View Members Button */}
-            <button
+            <motion.button
+              whileHover={{ scale: 1.02, x: 4 }}
+              whileTap={{ scale: 0.98 }}
               onClick={onToggle}
-              className="flex items-center gap-2 text-primary hover:text-primary-600 transition-colors font-medium text-sm"
+              className="flex items-center gap-2 text-primary hover:text-primary-600 transition-all font-semibold text-sm px-4 py-2 rounded-lg hover:bg-primary/10"
             >
               <span>
                 {isExpanded ? 'Hide' : 'View'} Registered Members ({workshop.members.length})
               </span>
-              {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-            </button>
+              <motion.div
+                animate={{ rotate: isExpanded ? 180 : 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                {isExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+              </motion.div>
+            </motion.button>
           </div>
         </div>
 
@@ -378,22 +427,27 @@ function MemberCard({ member }: MemberCardProps) {
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="bg-background-secondary p-4 rounded-lg border border-border hover:border-primary transition-colors"
+      whileHover={{ scale: 1.03, y: -2 }}
+      className="bg-gradient-to-br from-background-secondary to-white p-4 rounded-xl border-2 border-transparent hover:border-primary transition-all shadow-sm hover:shadow-lg"
     >
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-600 rounded-full flex items-center justify-center text-white font-semibold shrink-0">
+        <motion.div 
+          className="w-12 h-12 bg-gradient-to-br from-primary to-primary-600 rounded-full flex items-center justify-center text-white font-bold text-lg shrink-0 shadow-md"
+          whileHover={{ rotate: 360, scale: 1.1 }}
+          transition={{ duration: 0.5 }}
+        >
           {member.name.charAt(0).toUpperCase()}
-        </div>
+        </motion.div>
         <div className="flex-1 min-w-0">
-          <p className="font-medium text-text-primary truncate">{member.name}</p>
-          <div className="flex items-center gap-1 text-xs text-text-tertiary">
+          <p className="font-semibold text-text-primary truncate">{member.name}</p>
+          <div className="flex items-center gap-1 text-xs text-text-tertiary mt-0.5">
             <Mail size={12} />
             <span className="truncate">{member.email}</span>
           </div>
         </div>
       </div>
       <div className="mt-3 pt-3 border-t border-border">
-        <p className="text-xs text-text-tertiary">
+        <p className="text-xs text-text-tertiary font-medium">
           Registered: {new Date(member.registeredAt).toLocaleDateString('en-US', {
             month: 'short',
             day: 'numeric',
