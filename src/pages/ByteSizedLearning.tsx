@@ -178,16 +178,24 @@ export function ByteSizedLearning() {
             />
 
             {/* Header Bar */}
-            <div className="absolute top-0 left-0 right-0 z-30 p-4 bg-gradient-to-b from-black/60 to-transparent">
+            <div className="absolute top-0 left-0 right-0 z-30 p-4 bg-gradient-to-b from-black/70 via-black/40 to-transparent backdrop-blur-sm">
                 <div className="max-w-7xl mx-auto flex items-center justify-between">
-                    <h1 className="text-white font-bold text-lg drop-shadow-lg">Byte Sized Learning</h1>
-                    <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => setState(prev => ({ ...prev, showUploadModal: true }))}
-                        className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-full text-sm font-medium transition-colors"
+                    <motion.h1 
+                        className="text-white font-bold text-xl drop-shadow-2xl"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
                     >
-                        <Plus size={16} />
+                        Byte Sized Learning
+                    </motion.h1>
+                    <motion.button
+                        whileHover={{ scale: 1.08, y: -2 }}
+                        whileTap={{ scale: 0.92 }}
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        onClick={() => setState(prev => ({ ...prev, showUploadModal: true }))}
+                        className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white rounded-full text-sm font-semibold transition-all shadow-lg hover:shadow-blue-500/50"
+                    >
+                        <Plus size={18} />
                         Upload
                     </motion.button>
                 </div>
@@ -195,30 +203,34 @@ export function ByteSizedLearning() {
 
             {/* Category Navigation */}
             {state.categories.length > 0 && (
-                <div className="absolute top-16 left-0 right-0 z-30 px-4 py-2 bg-gradient-to-b from-black/40 to-transparent">
-                    <div className="max-w-7xl mx-auto flex gap-2 overflow-x-auto scrollbar-hide">
-                        <button
+                <div className="absolute top-16 left-0 right-0 z-30 px-4 py-3 bg-gradient-to-b from-black/50 to-transparent backdrop-blur-sm">
+                    <div className="max-w-7xl mx-auto flex gap-3 overflow-x-auto scrollbar-hide">
+                        <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
                             onClick={() => handleCategoryChange(state.categories[0].id)}
-                            className={`px-3 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
+                            className={`px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-all shadow-lg ${
                                 state.selectedCategoryId === state.categories[0].id
-                                    ? 'bg-blue-600 text-white'
-                                    : 'bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm'
+                                    ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-blue-500/50'
+                                    : 'bg-white/20 text-white hover:bg-white/30 backdrop-blur-md'
                             }`}
                         >
                             All
-                        </button>
+                        </motion.button>
                         {state.categories.map(category => (
-                            <button
+                            <motion.button
                                 key={category.id}
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
                                 onClick={() => handleCategoryChange(category.id)}
-                                className={`px-3 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
+                                className={`px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-all shadow-lg ${
                                     state.selectedCategoryId === category.id
-                                        ? 'bg-blue-600 text-white'
-                                        : 'bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm'
+                                        ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-blue-500/50'
+                                        : 'bg-white/20 text-white hover:bg-white/30 backdrop-blur-md'
                                 }`}
                             >
                                 {category.name}
-                            </button>
+                            </motion.button>
                         ))}
                     </div>
                 </div>
@@ -239,35 +251,60 @@ export function ByteSizedLearning() {
 
             {/* Error State */}
             {state.error && !state.loading && (
-                <div className="flex flex-col items-center justify-center h-full gap-4 p-4">
-                    <AlertCircle size={48} className="text-red-500" />
-                    <p className="text-white text-center">{state.error}</p>
+                <motion.div 
+                    className="flex flex-col items-center justify-center h-full gap-4 p-4"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                >
+                    <motion.div
+                        animate={{ 
+                            rotate: [0, 10, -10, 10, 0],
+                            scale: [1, 1.1, 1.1, 1.1, 1]
+                        }}
+                        transition={{ duration: 0.5, delay: 0.2 }}
+                    >
+                        <AlertCircle size={64} className="text-red-500" />
+                    </motion.div>
+                    <p className="text-white text-center text-lg font-semibold">{state.error}</p>
                     <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
+                        whileHover={{ scale: 1.1, y: -2 }}
+                        whileTap={{ scale: 0.9 }}
                         onClick={() => window.location.reload()}
-                        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+                        className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white rounded-full transition-all font-semibold shadow-lg hover:shadow-blue-500/50"
                     >
                         Retry
                     </motion.button>
-                </div>
+                </motion.div>
             )}
 
             {/* Empty State */}
             {!state.loading && state.videos.length === 0 && !state.error && (
-                <div className="flex flex-col items-center justify-center h-full gap-4 p-4">
-                    <div className="text-6xl">📭</div>
-                    <p className="text-white text-center">No videos in this category yet</p>
-                    <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => setState(prev => ({ ...prev, showUploadModal: true }))}
-                        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center gap-2"
+                <motion.div 
+                    className="flex flex-col items-center justify-center h-full gap-4 p-4"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                >
+                    <motion.div
+                        animate={{ 
+                            y: [0, -10, 0],
+                            rotate: [0, 5, -5, 0]
+                        }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                        className="text-8xl"
                     >
-                        <Plus size={18} />
+                        📭
+                    </motion.div>
+                    <p className="text-white text-center text-xl font-semibold">No videos in this category yet</p>
+                    <motion.button
+                        whileHover={{ scale: 1.1, y: -2 }}
+                        whileTap={{ scale: 0.9 }}
+                        onClick={() => setState(prev => ({ ...prev, showUploadModal: true }))}
+                        className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white rounded-full transition-all flex items-center gap-2 font-semibold shadow-lg hover:shadow-blue-500/50"
+                    >
+                        <Plus size={20} />
                         Upload First Video
                     </motion.button>
-                </div>
+                </motion.div>
             )}
 
             {/* Videos Feed */}
