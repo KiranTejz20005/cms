@@ -72,7 +72,7 @@
   }
 
   .card-hover {
-    @apply card hover:shadow-md hover:border-border-dark;
+    @apply card hover:shadow-lg hover:border-primary/30 hover:-translate-y-1;
   }
 
   .card-interactive {
@@ -81,19 +81,27 @@
 
   /* Button Variants */
   .btn {
-    @apply inline-flex items-center justify-center px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center px-4 py-2.5 rounded-lg font-medium text-sm transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   .btn-primary {
-    @apply btn bg-primary text-white hover:bg-primary-600 active:bg-primary-700 shadow-sm hover:shadow;
+    @apply btn bg-primary text-white hover:bg-primary-600 active:bg-primary-700 hover:shadow-lg hover:shadow-primary/30 active:scale-95;
   }
 
   .btn-secondary {
-    @apply btn bg-background-secondary text-text-primary hover:bg-background-tertiary border border-border;
+    @apply btn bg-background-secondary text-text-primary hover:bg-background-tertiary border border-border hover:border-primary/50 active:scale-95;
   }
 
   .btn-ghost {
-    @apply btn text-text-secondary hover:bg-background-secondary hover:text-text-primary;
+    @apply btn text-text-secondary hover:bg-background-secondary hover:text-text-primary active:scale-95;
+  }
+
+  .btn-danger {
+    @apply btn bg-error text-white hover:bg-error-dark active:bg-error-darker hover:shadow-lg hover:shadow-error/30 active:scale-95;
+  }
+
+  .btn-success {
+    @apply btn bg-success text-white hover:bg-success-dark active:bg-success-darker hover:shadow-lg hover:shadow-success/30 active:scale-95;
   }
 
   /* Input Styles */
